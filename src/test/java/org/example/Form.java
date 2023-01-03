@@ -10,14 +10,17 @@ import static com.codeborne.selenide.Condition.*;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
-/*
-* fill in all the fields
-* click submit button
-* verify submit messages
-* */
+import java.io.File;
 
 public class Form {
+    /*
+     * fill in all the fields
+     * click submit button
+     * verify submit messages
+     * */
     static String formUrl = "https://practice.automationbro.com/support-form/";
+    static String formFileUrl = "https://the-internet.herokuapp.com/upload";
+    static String formFileUrl2 = "https://practice.automationbro.com/cart/";
 
     @Test
     public void testFormFields() {
@@ -43,5 +46,22 @@ public class Form {
 
         // verify success message
         $("div[role=alert]").shouldHave(Condition.text("\t\tThanks for contacting us! We will be in touch with you shortly.\t"));
+    }
+
+    @Test
+    public void testUploadFile() {
+        /*
+        * upload file
+        * click upload button
+        * verify successful text
+        * */
+
+        open(this.formFileUrl);
+
+        $("#file-upload").uploadFile(new File("src/test/data/icon_file.png"));
+
+        $("#file-submit").click();
+
+        $("h3").shouldHave(Condition.text("File Uploaded!"));
     }
 }
