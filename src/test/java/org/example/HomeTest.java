@@ -1,11 +1,16 @@
 package org.example;
 
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.WebDriverRunner;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
 
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
 import static org.testng.Assert.*;
 
 public class HomeTest {
@@ -32,5 +37,30 @@ public class HomeTest {
 
         // by element id
         $(By.id("get-started")).click();
+
+        // verify url contains
+        String currentURl = WebDriverRunner.url();
+        assertTrue(currentURl.contains("get-started"));
+
+        // verify heading by CssSelector
+        $("h1").shouldHave(text("Think different. Make different."));
+
+        // verify by XPath
+        $(By.xpath("//a[class=\"custom-logo-link\"]"))
+                .should(be(visible));
+    }
+
+    @Test
+    public void testMultipleElements() {
+        this.openPage();
+        List<String> expectedLinks = List.of("Home", "About", "Shop", "Blog", "Contact", "My account");
+
+        ElementsCollection linkLists = $$("#primary-menu>li[id*=menu-item]");
+
+        // List<String> linkListsText = linkLists.texts();
+
+        // assertion
+        // assertEquals(linkListsText, expectedLinks);
+        linkLists.shouldHave(CollectionCondition.texts(expectedLinks));
     }
 }
